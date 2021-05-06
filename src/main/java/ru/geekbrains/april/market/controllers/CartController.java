@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.geekbrains.april.market.dtos.CartDto;
+import ru.geekbrains.april.market.dtos.ProductDto;
 import ru.geekbrains.april.market.error_handling.MarketError;
+import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
 import ru.geekbrains.april.market.models.Product;
 import ru.geekbrains.april.market.utils.Cart;
 import ru.geekbrains.april.market.services.ProductService;
@@ -29,36 +32,26 @@ public class CartController {
     private final ProductService productService;
 
     @GetMapping("/add")
-    public ResponseEntity<?> add(@RequestParam Long id) {
-        Optional<Product> product = productService.findOneById(id);
-        if (product.isPresent()) {
-            Product productAddToCart = product.get();
-            cart.add(productAddToCart);
-            return new ResponseEntity<>(productAddToCart, HttpStatus.OK);
-        } else {
-            List<String> errors = new ArrayList<>();
-            errors.add("Product not found");
-            return new ResponseEntity<>(new MarketError(HttpStatus.BAD_REQUEST.value(), errors), HttpStatus.BAD_REQUEST);
-        }
+    public void add(@RequestParam Long id) {
+      cart.add(productService.findOneById(id).orElseThrow(()-> new ResourceNotFoundException("Error")));
     }
 
+    //вернуть всю корзину с общей стоимостью и количеством
     @GetMapping("/showProducts")
     public ResponseEntity<?> showProducts() {
-        List<Product> productsInCart = cart.showItemsInCart();
-        return new ResponseEntity<>(productsInCart, HttpStatus.OK);
+        CartDto cartDto = new CartDto(cart);
+        return new ResponseEntity<>(cartDto,HttpStatus.OK);
     }
 
+
+    //вернуть только результат
     @GetMapping("/deleteAll")
-    public ResponseEntity<?> deleteAllProductsInCart() {
+    public void deleteAllProductsInCart() {
         cart.deleteAllItems();
-        List<Product> productsInCart = cart.showItemsInCart();
-        return new ResponseEntity<>(productsInCart, HttpStatus.OK);
     }
 
     @GetMapping("/remove")
-    public ResponseEntity<?> deleteOnrProductFromCart(@RequestParam Long id) {
+    public void deleteOnrProductFromCart(@RequestParam Long id) {
         cart.deleteOneProduct(id);
-        List<Product> productsInCart = cart.showItemsInCart();
-        return new ResponseEntity<>(productsInCart, HttpStatus.OK);
     }
 }

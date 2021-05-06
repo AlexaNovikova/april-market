@@ -1,30 +1,26 @@
 package ru.geekbrains.april.market.models;
 
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name ="products")
-@NoArgsConstructor
+@Table(name="categories")
 @Data
-public class Product {
+@NoArgsConstructor
+public class Category {
 
     @Id
+    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="id")
     private Long id;
 
-    @Column (name = "title")
+    @Column(name="title")
     private String title;
 
-    @Column(name = "price")
-    private  int price;
-
-
-    @ManyToOne
-    @JoinColumn(name="category_id")
-    private Category category;
-
+    @OneToMany(mappedBy="category")
+    private List<Product> products;
 }

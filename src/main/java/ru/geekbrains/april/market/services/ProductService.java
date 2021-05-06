@@ -2,7 +2,13 @@ package ru.geekbrains.april.market.services;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.geekbrains.april.market.dtos.ProductDto;
+import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
+import ru.geekbrains.april.market.models.Category;
 import ru.geekbrains.april.market.models.Product;
 import ru.geekbrains.april.market.repositories.ProductRepository;
 
@@ -13,9 +19,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
+    private final CategoryService categoryService;
 
-    public List<Product> findAll(){
-        return productRepository.findAll();
+    public Page<Product> findPage(int page, int pageSize){
+        return productRepository.findAllBy(PageRequest.of(page,pageSize));
     }
 
     public Optional<Product> findOneById(Long id){
@@ -26,8 +33,30 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Product save (Product product){
-        return productRepository.save(product);
+
+    @Transactional
+    public ProductDto createNewProduct (ProductDto productDto){
+        Product product = new Product();
+        product.setPrice(productDto.getPrice());
+        product.setTitle(productDto.getTitle());
+        Category category = categoryService.findByTitle(productDto.getCategoryTitle()).
+                orElseThrow(() -> new ResourceNotFoundException("Category doesn't exist " +
+                        productDto.getCategoryTitle()));
+        product.setCategory(category);
+        product = productRepository.save(product);
+        return new ProductDto(product);
+    }
+
+    @Transactional
+    public ProductDto updateProduct(ProductDto productDto){
+        Product product = findOneById(productDto.getId()).orElseThrow(()->new ResourceNotFoundException("Product doesn't exist "+ productDto.getId()));
+        product.setPrice(productDto.getPrice());
+        product.setTitle(productDto.getTitle());
+        Category category = categoryService.findByTitle(productDto.getCategoryTitle()).
+                orElseThrow(() -> new ResourceNotFoundException("Category doesn't exist " +
+                        productDto.getCategoryTitle()));
+        product.setCategory(category);
+        return new ProductDto(product);
     }
 
 }
