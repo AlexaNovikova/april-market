@@ -13,6 +13,7 @@ import ru.geekbrains.april.market.dtos.ProductDto;
 import ru.geekbrains.april.market.error_handling.MarketError;
 import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
 import ru.geekbrains.april.market.models.Product;
+import ru.geekbrains.april.market.services.OrderItemsService;
 import ru.geekbrains.april.market.utils.Cart;
 import ru.geekbrains.april.market.services.ProductService;
 
@@ -29,18 +30,23 @@ import org.springframework.http.ResponseEntity;
 @Slf4j
 public class CartController {
     private final Cart cart;
-    private final ProductService productService;
+    private final OrderItemsService orderItemsService;
 
     @GetMapping("/add")
     public void add(@RequestParam Long id) {
-      cart.add(productService.findOneById(id).orElseThrow(()-> new ResourceNotFoundException("Error")));
+      cart.add(id);
     }
+
+    @GetMapping("/save")
+    public void save() {
+        orderItemsService.saveOrder(cart);
+    }
+
 
     //вернуть всю корзину с общей стоимостью и количеством
     @GetMapping("/showProducts")
-    public ResponseEntity<?> showProducts() {
-        CartDto cartDto = new CartDto(cart);
-        return new ResponseEntity<>(cartDto,HttpStatus.OK);
+    public CartDto showProducts() {
+        return new CartDto(cart);
     }
 
 
@@ -50,8 +56,8 @@ public class CartController {
         cart.deleteAllItems();
     }
 
-    @GetMapping("/remove")
-    public void deleteOnrProductFromCart(@RequestParam Long id) {
-        cart.deleteOneProduct(id);
-    }
+//    @GetMapping("/remove")
+//    public void deleteOnrProductFromCart(@RequestParam Long id) {
+//        cart.deleteOneProduct(id);
+//    }
 }
