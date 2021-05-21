@@ -20,9 +20,10 @@ public class RegisterService {
 
 
     @Transactional
-    public User register(String login, String password){
+    public User register(String login, String password, String email){
         User user = new User();
         user.setUsername(login);
+        user.setEmail(email);
         int workload =12;
         String salt = BCrypt.gensalt(workload);
         String hashed_password = BCrypt.hashpw(password, salt);

@@ -144,13 +144,14 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
     };
 
 
- $scope.createOrder = function (telephone,email) {
+ $scope.createOrder = function (telephone,email,address) {
         $http({
                     url: contextPath + '/api/v1/orders',
                     method: 'POST',
                     params: {
                      telephone: telephone,
                      email: email,
+                     address: address,
                      temp: 'empty'
                      }
                 }).then(function successCallback(response) {
@@ -165,13 +166,14 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
                  );
             };
 
- $scope.register = function (login, password) {
+ $scope.register = function (login, password, email) {
         $http({
                     url: contextPath + '/api/v1/register',
                     method: 'POST',
                     params: {
                      login: login,
                      password: password,
+                     email: email,
                      temp: 'empty'
                      }
                 }).then(function successCallback(response) {

@@ -22,6 +22,19 @@ CREATE TABLE users_roles (
           primary key (user_id, role_id)
 );
 
+create table addresses (
+    id                         bigserial primary key,
+    address                    varchar(50) not null ,
+    created_at              timestamp default current_timestamp,
+    updated_at              timestamp default current_timestamp
+);
+
+CREATE TABLE users_addresses (
+          user_id                    bigint not null references users (id),
+          address_id                 bigint not null references addresses (id),
+          primary key (user_id, address_id)
+);
+
 insert into roles (name)
 values
 ('ROLE_USER'),

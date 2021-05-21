@@ -23,9 +23,10 @@ public class OrderController {
     private final UserService userService;
 
     @PostMapping
-    public void createNewOrder(Principal principal, @RequestParam String telephone, @RequestParam String email) {
+    public void createNewOrder(Principal principal, @RequestParam String telephone, @RequestParam String email,
+                               @RequestParam String address) {
         User user = userService.findByUsername(principal.getName()).get();
-        userService.setContactInfoForUser(user,telephone, email);
+        userService.setContactInfoForUser(user,telephone, email, address);
         orderService.createOrderForCurrentUser(user);
     }
 

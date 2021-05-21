@@ -8,8 +8,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.geekbrains.april.market.models.Address;
 import ru.geekbrains.april.market.models.Role;
 import ru.geekbrains.april.market.models.User;
+import ru.geekbrains.april.market.repositories.AddressRepository;
 import ru.geekbrains.april.market.repositories.UserRepository;
 
 import java.util.Collection;
@@ -20,14 +22,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    public void setContactInfoForUser(User user, String telephone, String email){
+    @Transactional
+    public void setContactInfoForUser(User user, String telephone, String email, String address)
+    {
         user.setTelephone(telephone);
         user.setEmail(email);
+        Address userAddress = new Address();
+        userAddress.setAddress(address);
+        addressRepository.save(userAddress);
+        Collection<Address> userAdresses = user.getAddresses();
+        userAdresses.add(userAddress);
+        user.setAddresses(userAdresses);
         userRepository.save(user);
     }
 

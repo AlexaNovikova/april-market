@@ -22,9 +22,9 @@ public class RegisterController {
     private final RegisterService registerService;
 
     @PostMapping
-    public ResponseEntity<?> register(@RequestParam String login, @RequestParam String password)
+    public ResponseEntity<?> register(@RequestParam String login, @RequestParam String password, @RequestParam String email)
     {
-        User newUser = registerService.register(login, password);
+        User newUser = registerService.register(login, password, email);
         return new ResponseEntity<>(new UserDto(newUser.getUsername(), newUser.getEmail()), HttpStatus.CREATED);
     }
 }
