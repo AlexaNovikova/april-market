@@ -143,9 +143,49 @@
 
         </tbody>
     </table>
-    <button class="btn btn-primary" ng-click="cleanCart()">Delete All Products From Cart</button>
-    <br>
-    <button class="btn btn-primary" ng-click="saveCart()">Buy</button>
+    <p></p>
+    <span ng-if="cart.items.length == 0">Ваша корзина пуста</span>
+    <button ng-click="cleanCart()" class="btn btn-primary" ng-if="cart.items.length > 0">Очистить корзину</button>
+
+    <div ng-if="isUserLoggedIn()">
+        <p></p>
+        <div ng-if="cart.items.length > 0">
+            <h4>Оформление заказа</h4>
+            <form novalidate ng-submit="createOrder(telephone, email)">
+                <div class="mb-3">
+                    <label for="telephone" class="form-label">Телефон</label>
+                    <input type="tel" class="form-control" ng-model = "telephone" id="telephone" aria-describedby="telHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" ng-model = "email" id="email" aria-describedby="emailHelp">
+                </div>
+                <button type="submit" class="btn btn-primary">Оформить заказ</button>
+            </form>
+        </div>
+
+<!--        <button ng-click="createOrder()" class="btn btn-primary" ng-if="cart.items.length > 0">Оформить заказ</button>-->
+
+        <p></p>
+        <h4>Мои заказы</h4>
+        <span ng-if="myOrders.length == 0">Вы пока не сделали ни одного заказа</span>
+        <table class="table" ng-if="myOrders.length > 0">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Описание</th>
+                <th scope="col">Цена</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="order in myOrders">
+                <td>{{order.id}}</td>
+                <td>{{order.description}}</td>
+                <td>{{order.price}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>

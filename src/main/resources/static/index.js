@@ -62,12 +62,15 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
           });
       }
 
-    $scope.saveCart = function () {
-                 $http.get(contextPath + '/api/v1/cart/save')
-                     .then(function (response) {
-                         $scope.updateCart();
-                     });
-             };
+
+    $scope.showMyOrders = function () {
+        $http({
+            url: contextPath + '/api/v1/orders',
+            method: 'GET'
+        }).then(function (response) {
+            $scope.myOrders = response.data;
+        });
+    };
 
        $scope.removeProductFromCart = function (productId) {
                 $http({
@@ -97,15 +100,18 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
         return arr;
     }
 
-  $scope.tryToAuth = function () {
+
+    $scope.tryToAuth = function () {
         $http.post(contextPath + '/auth', $scope.user)
             .then(function successCallback(response) {
                 if (response.data.token) {
                     $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
                     $localStorage.aprilMarketCurrentUser = {username: $scope.user.username, token: response.data.token};
+                     $scope.currentUserName=$scope.user.username;
                     $scope.user.username = null;
                     $scope.user.password = null;
 
+                    $scope.showMyOrders();
                 }
             }, function errorCallback(response) {
             });
@@ -122,7 +128,6 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
 
     $scope.isUserLoggedIn = function () {
         if ($localStorage.aprilMarketCurrentUser) {
-            $scope.currentUserName=$localStorage.aprilMarketCurrentUser.username;
             return true;
         } else {
             return false;
@@ -139,8 +144,50 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
     };
 
 
+ $scope.createOrder = function (telephone,email) {
+        $http({
+                    url: contextPath + '/api/v1/orders',
+                    method: 'POST',
+                    params: {
+                     telephone: telephone,
+                     email: email,
+                     temp: 'empty'
+                     }
+                }).then(function successCallback(response) {
+                alert('Ваш заказ сформирован');
+                $scope.showMyOrders();
+                $scope.updateCart();
+                 },
+                 function errorCallback(response){
+                 console.log(response.data);
+                 alert(response.data.message);
+             }
+                 );
+            };
+
+ $scope.register = function (login, password) {
+        $http({
+                    url: contextPath + '/api/v1/register',
+                    method: 'POST',
+                    params: {
+                     login: login,
+                     password: password,
+                     temp: 'empty'
+                     }
+                }).then(function successCallback(response) {
+                alert('Вы успешно зарегистрированы! Войдите в магазин используя ваш логин и пароль.');
+
+                 },
+                 function errorCallback(response){
+                 console.log(response.data);
+                 alert(response.data.message);
+             }
+                 );
+            };
     if ($localStorage.aprilMarketCurrentUser) {
         $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.aprilMarketCurrentUser.token;
+        $scope.currentUserName=$localStorage.aprilMarketCurrentUser.username;
+        $scope.showMyOrders();
     }
 
       $scope.loadPage(1);

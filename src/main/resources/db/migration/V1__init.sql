@@ -4,6 +4,7 @@ create table users (
     username                varchar(30) not null unique,
     password                varchar(80) not null,
     email                   varchar(80) unique,
+    telephone               varchar(80) unique,
     created_at              timestamp default current_timestamp,
     updated_at              timestamp default current_timestamp
 );
@@ -82,15 +83,23 @@ INSERT INTO products(title, price, category_id) VALUES
 ('Bread4', 34, 1),
 ('Milk5', 56, 1);
 
+create table orders (
+    id                              bigserial primary key,
+    user_id                         bigint references users (id),
+    price                           numeric (8, 2),
+    created_at                      timestamp default current_timestamp,
+    updated_at                      timestamp default current_timestamp
+);
 
 CREATE table order_items (
-    id                  bigserial primary key,
-    product_id          bigint references products(id),
-    quantity            int,
-    price_per_product   numeric(8,2),
-    price               numeric(8,2),
-    created_at          timestamp default current_timestamp,
-    updated_at          timestamp default current_timestamp
+    id                              bigserial primary key,
+    order_id                        bigint references orders (id),
+    product_id                      bigint references products(id),
+    quantity                        int,
+    price_per_product               numeric(8,2),
+    price                           numeric(8,2),
+    created_at                      timestamp default current_timestamp,
+    updated_at                      timestamp default current_timestamp
 );
 
 COMMIT;

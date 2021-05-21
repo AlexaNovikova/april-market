@@ -50,6 +50,11 @@ public class Cart {
        totalPrice=totalPrice.add(product.getPrice());
     }
 
+    public void clear() {
+        items.clear();
+        recalculate();
+    }
+
     public List<OrderItem> getItemsInCart(){
         return Collections.unmodifiableList(items);
     }
