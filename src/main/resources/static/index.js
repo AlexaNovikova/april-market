@@ -144,7 +144,7 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
     };
 
 
- $scope.createOrder = function (telephone,email,address) {
+ $scope.createOrder = function (telephone, email, address) {
         $http({
                     url: contextPath + '/api/v1/orders',
                     method: 'POST',
@@ -166,26 +166,51 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
                  );
             };
 
- $scope.register = function (login, password, email) {
-        $http({
-                    url: contextPath + '/api/v1/register',
-                    method: 'POST',
-                    params: {
-                     login: login,
-                     password: password,
-                     email: email,
-                     temp: 'empty'
-                     }
-                }).then(function successCallback(response) {
-                alert('Вы успешно зарегистрированы! Войдите в магазин используя ваш логин и пароль.');
+// $scope.register = function (login, password, email) {
+//        $http({
+//                    url: contextPath + '/api/v1/register',
+//                    method: 'POST',
+//                    params: {
+//                     login: login,
+//                     password: password,
+//                     email: email,
+//                     temp: 'empty'
+//                     }
+//                }).then(function successCallback(response) {
+//                alert('Вы успешно зарегистрированы! Войдите в магазин используя ваш логин и пароль.');
+//
+//                 },
+//                 function errorCallback(response){
+//                 console.log(response.data);
+//                 alert(response.data.message);
+//             }
+//                 );
+//            };
 
-                 },
-                 function errorCallback(response){
-                 console.log(response.data);
-                 alert(response.data.message);
-             }
-                 );
+       $scope.register = function () {
+        $http.post(contextPath + '/api/v1/products', $scope.newUser)
+            .then(function successCallback(response) {
+               alert('Вы успешно зарегистрированы! Войдите в магазин используя ваш логин и пароль.');
+                },
+                function errorCallback(response){
+                console.log(response.data);
+                alert(response.data.message);
+            });
             };
+
+//       $scope.createOrder = function () {
+//             $http.post(contextPath + '/api/v1/orders', $scope.aprilMarketCurrentUser)
+//                 .then(function successCallback(response) {
+//                    alert('Ваш заказ сформирован');
+//                     $scope.showMyOrders();
+//                     $scope.updateCart();
+//                     },
+//                     function errorCallback(response){
+//                     console.log(response.data);
+//                     alert(response.data.message);
+//                 });
+//                 };
+
     if ($localStorage.aprilMarketCurrentUser) {
         $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.aprilMarketCurrentUser.token;
         $scope.currentUserName=$localStorage.aprilMarketCurrentUser.username;

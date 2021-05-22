@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.geekbrains.april.market.dtos.UserDto;
 import ru.geekbrains.april.market.models.Role;
 import ru.geekbrains.april.market.models.User;
 import ru.geekbrains.april.market.repositories.RoleRepository;
@@ -20,13 +21,10 @@ public class RegisterService {
 
 
     @Transactional
-    public User register(String login, String password, String email){
-        User user = new User();
-        user.setUsername(login);
-        user.setEmail(email);
+    public User register(User user){
         int workload =12;
         String salt = BCrypt.gensalt(workload);
-        String hashed_password = BCrypt.hashpw(password, salt);
+        String hashed_password = BCrypt.hashpw(user.getPassword(), salt);
         user.setPassword(hashed_password);
         Role role = roleRepository.getOne(1L);
         user.setRoles(Collections.singleton(role));
