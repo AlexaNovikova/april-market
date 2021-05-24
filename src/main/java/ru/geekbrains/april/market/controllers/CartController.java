@@ -4,10 +4,7 @@ package ru.geekbrains.april.market.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.april.market.dtos.CartDto;
 import ru.geekbrains.april.market.dtos.ProductDto;
 import ru.geekbrains.april.market.error_handling.MarketError;
@@ -32,9 +29,9 @@ public class CartController {
     private final Cart cart;
     private final OrderItemsService orderItemsService;
 
-    @GetMapping("/add")
-    public void add(@RequestParam Long id) {
-      cart.add(id);
+    @GetMapping("/add/{productId}")
+    public void addToCart(@PathVariable(name = "productId") Long id) {
+        cart.addToCart(id);
     }
 
     @GetMapping("/save")
@@ -51,7 +48,7 @@ public class CartController {
 
 
     //вернуть только результат
-    @GetMapping("/deleteAll")
+    @GetMapping("/clear")
     public void deleteAllProductsInCart() {
         cart.deleteAllItems();
     }

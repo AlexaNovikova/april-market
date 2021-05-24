@@ -21,11 +21,11 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
 
-    public Page<Product> findPage(int page, int pageSize){
-        return productRepository.findAllBy(PageRequest.of(page,pageSize));
+    public Page<Product> findPage(int page, int pageSize) {
+        return productRepository.findAllBy(PageRequest.of(page, pageSize));
     }
 
-    public Optional<Product> findOneById(Long id){
+    public Optional<Product> findOneById(Long id) {
         return productRepository.findById(id);
     }
 

@@ -1,0 +1,82 @@
+<p></p>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Название</th>
+        <th scope="col">Категория</th>
+        <th scope="col">Цена</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="p in productsPage.content">
+        <td>{{p.id}}</td>
+        <td>{{p.title}}</td>
+        <td>{{p.categoryTitle}}</td>
+        <td>{{p.price}}</td>
+        <td>
+            <button class="btn btn-outline-primary" ng-click="addToCart(p.id)">В корзину</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <li ng-class="productsPage.first ? 'page-item disabled' : 'page-item'">
+            <a class="page-link" ng-click="loadPage(1)">В начало</a>
+        </li>
+
+        <li ng-class="productsPage.first ? 'page-item disabled' : 'page-item'">
+            <a class="page-link" ng-click="loadPage(productsPage.number)">Пред.</a>
+        </li>
+
+        <li ng-class="productsPage.number == pageIndex - 1 ? 'page-item active' : 'page-item'"
+            ng-repeat="pageIndex in paginationArray">
+            <a class="page-link" ng-click="loadPage(pageIndex)">{{pageIndex}}</a>
+        </li>
+
+        <li ng-class="productsPage.last ? 'page-item disabled' : 'page-item'">
+            <a class="page-link" ng-click="loadPage(productsPage.number + 2)">След.</a>
+        </li>
+    </ul>
+</nav>
+
+<div ng-show="isUserLoggedIn()">
+    <p></p>
+    <h4>Мои заказы</h4>
+    <span ng-show="myOrders.length == 0">Вы пока не сделали ни одного заказа</span>
+    <table class="table" ng-show="myOrders.length > 0">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Цена</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="order in myOrders">
+            <td>{{order.id}}</td>
+            <td>{{order.description}}</td>
+            <td>{{order.price}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--    <p></p>-->
+<!--    <h4>Add new product</h4>-->
+<!--    <div>-->
+<!--        <form novalidate ng-submit="createNewProduct()">-->
+<!--            <div class="mb-3">-->
+<!--                <label for="inputTitle" class="form-label">Title</label>-->
+<!--                <input type="text" class="form-control" ng-model="newProduct.title" id="inputTitle" aria-describedby="titleHelp">-->
+<!--            </div>-->
+<!--            <div class="mb-3">-->
+<!--                <label for="inputPrice" class="form-label">Price</label>-->
+<!--                <input type="number" class="form-control" ng-model="newProduct.price" id="inputPrice" aria-describedby="priceHelp">-->
+<!--            </div>-->
+<!--            <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--        </form>-->
+<!--    </div>-->

@@ -37,18 +37,20 @@ public class Cart {
         }
     }
 
-    public void add(Long id){
-        for(OrderItem oi:items){
-            if(oi.getProduct().getId().equals(id)){
-                oi.incrementQuantity();
+    public void addToCart(Long id) {
+        for (OrderItem orderItem : items) {
+            if (orderItem.getProduct().getId().equals(id)) {
+                orderItem.incrementQuantity();
                 recalculate();
                 return;
             }
         }
-        Product product=productService.findOneById(id).orElseThrow(()-> new ResourceNotFoundException("продукт не найден"));
-       items.add(new OrderItem(product));
-       totalPrice=totalPrice.add(product.getPrice());
+
+        Product product = productService.findOneById(id).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exists id: " + id + " (add to cart)"));
+        items.add(new OrderItem(product));
+        recalculate();
     }
+
 
     public void clear() {
         items.clear();
