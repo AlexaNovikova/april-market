@@ -36,14 +36,26 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
         });
     };
 
-    $scope.createOrder = function () {
-        $http({
-            url: contextPath + '/api/v1/cart/save/',
-            method: 'POST'
-        }).then(function (response) {
-            $scope.loadCart();
-        });
-    };
+    $scope.createOrder = function (telephone,email, address) {
+           $http({
+                       url: contextPath + '/api/v1/orders',
+                       method: 'POST',
+                       params: {
+                        telephone: telephone,
+                        email: email,
+                        address:address,
+                        temp: 'empty'
+                        }
+                   }).then(function successCallback(response) {
+                   alert('Ваш заказ сформирован');
+                   $scope.loadCart();
+                    },
+                    function errorCallback(response){
+                    console.log(response.data);
+                    alert(response.data.message);
+                }
+                    );
+               };
 
     $scope.loadCart();
 });

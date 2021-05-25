@@ -1,0 +1,41 @@
+<p></p>
+<div ng-show="!isUserLoggedIn()">
+    <h2>Войдите в магазин, чтобы увидеть список ваших заказов.</h2>
+</div>
+<div ng-show="isUserLoggedIn()">
+    <p></p>
+    <h4>Мои заказы</h4>
+    <span ng-show="myOrders.length == 0">Вы пока не сделали ни одного заказа</span>
+    <table class="table" ng-show="myOrders.length > 0">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Цена</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="order in myOrders">
+            <td>{{order.id}}</td>
+            <td>{{order.description}}</td>
+            <td>{{order.price}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--    <p></p>-->
+<!--    <h4>Add new product</h4>-->
+<!--    <div>-->
+<!--        <form novalidate ng-submit="createNewProduct()">-->
+<!--            <div class="mb-3">-->
+<!--                <label for="inputTitle" class="form-label">Title</label>-->
+<!--                <input type="text" class="form-control" ng-model="newProduct.title" id="inputTitle" aria-describedby="titleHelp">-->
+<!--            </div>-->
+<!--            <div class="mb-3">-->
+<!--                <label for="inputPrice" class="form-label">Price</label>-->
+<!--                <input type="number" class="form-control" ng-model="newProduct.price" id="inputPrice" aria-describedby="priceHelp">-->
+<!--            </div>-->
+<!--            <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--        </form>-->
+<!--    </div>-->

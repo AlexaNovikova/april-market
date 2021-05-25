@@ -18,30 +18,33 @@ public class StatisticsService {
     private final Time serviceTime;
 
     @Around("execution(public * ru.geekbrains.april.market.services.OrderService.*(..))")
-    public void methodProfilingOrderService(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    public Object methodProfilingOrderService(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         long begin = System.currentTimeMillis();
-        proceedingJoinPoint.proceed();
+        Object out = proceedingJoinPoint.proceed();
         long end = System.currentTimeMillis();
         long duration = end - begin;
         serviceTime.addTimeOrderService(duration);
+        return out;
     }
 
     @Around("execution(public * ru.geekbrains.april.market.services.ProductService.*(..))")
-    public void methodProfilingProductService(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    public Object methodProfilingProductService(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         long begin = System.currentTimeMillis();
-        proceedingJoinPoint.proceed();
+        Object out = proceedingJoinPoint.proceed();
         long end = System.currentTimeMillis();
         long duration = end - begin;
         serviceTime.addTimeProductService(duration);
+        return out;
     }
 
     @Around("execution(public * ru.geekbrains.april.market.services.UserService.*(..))")
-    public void methodProfilingUserService(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    public Object methodProfilingUserService(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         long begin = System.currentTimeMillis();
-        proceedingJoinPoint.proceed();
+        Object out = proceedingJoinPoint.proceed();
         long end = System.currentTimeMillis();
         long duration = end - begin;
         serviceTime.addTimeUserService(duration);
+        return out;
     }
 
     public Time getServiceTime(){

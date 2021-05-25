@@ -1,0 +1,38 @@
+<p></p>
+<div ng-show="!isUserLoggedIn()">
+    <p></p>
+    <h4>Регистрация</h4>
+        <div>
+            <form novalidate ng-submit="register()">
+                <div class="mb-3">
+                    <label for="inputUsername" class="form-label">Login</label>
+                    <input type="text" class="form-control" ng-model="newUser.username" id="inputUsername" aria-describedby="nameHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="InputPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" ng-model="newUser.password" id="inputPassword" aria-describedby="passHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="InputEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" ng-model="newUser.email" id="inputEmail" aria-describedby="emailHelp">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+</div>
+
+<!--    <p></p>-->
+<!--    <h4>Add new product</h4>-->
+<!--    <div>-->
+<!--        <form novalidate ng-submit="createNewProduct()">-->
+<!--            <div class="mb-3">-->
+<!--                <label for="inputTitle" class="form-label">Title</label>-->
+<!--                <input type="text" class="form-control" ng-model="newProduct.title" id="inputTitle" aria-describedby="titleHelp">-->
+<!--            </div>-->
+<!--            <div class="mb-3">-->
+<!--                <label for="inputPrice" class="form-label">Price</label>-->
+<!--                <input type="number" class="form-control" ng-model="newProduct.price" id="inputPrice" aria-describedby="priceHelp">-->
+<!--            </div>-->
+<!--            <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--        </form>-->
+<!--    </div>-->

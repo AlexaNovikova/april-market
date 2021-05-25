@@ -17,7 +17,7 @@ import ru.geekbrains.april.market.statistics.Time;
 public class TimeStatisticsController {
     private final StatisticsService statisticsService;
 
-    @GetMapping()
+    @GetMapping
     public Time showTime() {
         return statisticsService.getServiceTime();
     }

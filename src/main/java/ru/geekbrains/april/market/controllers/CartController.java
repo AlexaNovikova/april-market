@@ -39,7 +39,6 @@ public class CartController {
         orderItemsService.saveOrder(cart);
     }
 
-
     //вернуть всю корзину с общей стоимостью и количеством
     @GetMapping("/showProducts")
     public CartDto showProducts() {

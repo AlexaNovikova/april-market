@@ -29,6 +29,22 @@
 
 <div ng-show="isUserLoggedIn()">
     <p></p>
-    <h4>Оформление заказа</h4>
-    <button ng-click="createOrder()" class="btn btn-primary" ng-show="cartDto.items.length > 0">Оформить заказ</button>
+    <div ng-if="cartDto.items.length > 0">
+        <h4>Оформление заказа</h4>
+        <form novalidate ng-submit="createOrder(telephone, email, address)">
+            <div class="mb-3">
+                <label for="telephone" class="form-label">Телефон</label>
+                <input type="tel" class="form-control" ng-model = "telephone" id="telephone" aria-describedby="telHelp">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" ng-model = "email" id="email" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Адрес</label>
+                <input type="text" class="form-control" ng-model = "address" id="address" aria-describedby="adrHelp">
+            </div>
+            <button type="submit" class="btn btn-primary">Оформить заказ</button>
+        </form>
+    </div>
 </div>

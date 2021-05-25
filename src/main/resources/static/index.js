@@ -20,6 +20,18 @@
                 templateUrl: 'cart/cart.html',
                 controller: 'cartController'
             })
+            .when('/orders', {
+                 templateUrl: 'orders/orders.html',
+                 controller: 'ordersController'
+             })
+            .when('/statistics', {
+                  templateUrl: 'statistics/statistics.html',
+                  controller: 'statisticsController'
+            })
+             .when('/registration', {
+                   templateUrl: 'registration/registration.html',
+                   controller: 'registrationController'
+             })
             .otherwise({
                 redirectTo: '/'
             });

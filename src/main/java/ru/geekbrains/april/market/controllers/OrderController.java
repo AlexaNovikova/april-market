@@ -30,7 +30,6 @@ public class OrderController {
             orderService.createOrderForCurrentUser(user);
         }
 
-
     @GetMapping
     @Transactional
     public List<OrderDto> getAllOrdersForCurrentUser(Principal principal) {
