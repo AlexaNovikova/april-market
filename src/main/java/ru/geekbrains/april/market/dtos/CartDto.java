@@ -24,7 +24,7 @@ public class CartDto {
     public CartDto(Cart cart){
         items= new ArrayList<>();
         items.addAll(cart.getItemsInCart().stream().map(OrderItemDto::new).collect(Collectors.toList()));
-        totalPrice=cart.getTotalPrice();
+        //totalPrice=cart.getTotalPrice();
     }
 
 }

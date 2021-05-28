@@ -10,6 +10,7 @@ import ru.geekbrains.april.market.dtos.ProductDto;
 import ru.geekbrains.april.market.error_handling.MarketError;
 import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
 import ru.geekbrains.april.market.models.Product;
+import ru.geekbrains.april.market.services.CartService;
 import ru.geekbrains.april.market.services.OrderItemsService;
 import ru.geekbrains.april.market.utils.Cart;
 import ru.geekbrains.april.market.services.ProductService;
@@ -26,30 +27,30 @@ import org.springframework.http.ResponseEntity;
 @RequiredArgsConstructor
 @Slf4j
 public class CartController {
-    private final Cart cart;
+    private final CartService cartService;
     private final OrderItemsService orderItemsService;
 
     @GetMapping("/add/{productId}")
     public void addToCart(@PathVariable(name = "productId") Long id) {
-        cart.addToCart(id);
+        cartService.addToCart(id);
     }
 
     @GetMapping("/save")
     public void save() {
-        orderItemsService.saveOrder(cart);
+        orderItemsService.saveOrder(cartService.getCart());
     }
 
     //вернуть всю корзину с общей стоимостью и количеством
     @GetMapping("/showProducts")
     public CartDto showProducts() {
-        return new CartDto(cart);
+        return new CartDto(cartService.getCart());
     }
 
 
     //вернуть только результат
     @GetMapping("/clear")
     public void deleteAllProductsInCart() {
-        cart.deleteAllItems();
+        cartService.deleteAllItems();
     }
 
 //    @GetMapping("/remove")

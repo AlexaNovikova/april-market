@@ -9,29 +9,32 @@ angular.module('app').controller('productsController', function ($scope, $http, 
         }
     };
 
-    $scope.loadPage = function (page) {
-        $http({
-            url: contextPath + '/api/v1/products',
-            method: 'GET',
-            params: {
-                p: page
-            }
-        }).then(function (response) {
-            $scope.productsPage = response.data;
+     $scope.loadPage = function (page) {
+            $http({
+                url: contextPath + '/api/v1/products',
+                method: 'GET',
+                params: {
+                    p: page,
+                    title: $scope.filter ? $scope.filter.title : null,
+                    min_price: $scope.filter ? $scope.filter.min_price : null,
+                    max_price: $scope.filter ? $scope.filter.max_price : null
+                }
+            }).then(function (response) {
+                $scope.productsPage = response.data;
 
-            let minPageIndex = page - 2;
-            if (minPageIndex < 1) {
-                minPageIndex = 1;
-            }
+                let minPageIndex = page - 2;
+                if (minPageIndex < 1) {
+                    minPageIndex = 1;
+                }
 
-            let maxPageIndex = page + 2;
-            if (maxPageIndex > $scope.productsPage.totalPages) {
-                maxPageIndex = $scope.productsPage.totalPages;
-            }
+                let maxPageIndex = page + 2;
+                if (maxPageIndex > $scope.productsPage.totalPages) {
+                    maxPageIndex = $scope.productsPage.totalPages;
+                }
 
-            $scope.paginationArray = $scope.generatePagesIndexes(minPageIndex, maxPageIndex);
-        });
-    };
+                $scope.paginationArray = $scope.generatePagesIndexes(minPageIndex, maxPageIndex);
+            });
+        };
 
     $scope.addToCart = function (productId) {
         $http({

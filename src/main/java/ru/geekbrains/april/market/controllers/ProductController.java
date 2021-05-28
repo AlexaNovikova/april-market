@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +18,7 @@ import ru.geekbrains.april.market.error_handling.MarketError;
 import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
 import ru.geekbrains.april.market.models.Category;
 import ru.geekbrains.april.market.models.Product;
+import ru.geekbrains.april.market.repositories.specifications.ProductSpecifications;
 import ru.geekbrains.april.market.services.CategoryService;
 import ru.geekbrains.april.market.services.ProductService;
 
@@ -31,10 +33,12 @@ public class ProductController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public Page<ProductDto> showAllProducts(@RequestParam(name="p", defaultValue = "1") int page) {
-        Page <Product> productPage = productService.findPage(page - 1, 10);
-        Page <ProductDto> dtoPage = new PageImpl<>(productPage.getContent().stream().map(ProductDto::new).collect(Collectors.toList()), productPage.getPageable(), productPage.getTotalElements());
-        return dtoPage;
+    public Page<ProductDto> getAllProducts(@RequestParam MultiValueMap<String, String> params,
+                                           @RequestParam(name = "p", defaultValue = "1") int page) {
+        if (page < 1) {
+            page = 1;
+        }
+        return productService.findAll(ProductSpecifications.build(params), page, 10);
     }
 
     @GetMapping("/{id}")

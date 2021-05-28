@@ -10,7 +10,5 @@ angular.module('app').controller('statisticsController', function ($scope, $http
         });
     };
 
-
-
     $scope.showStatistic();
 });

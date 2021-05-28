@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final CartService cartService;
     private final Cart cart;
 
     public List<Order> findAllByUser(User user) {
@@ -23,14 +24,14 @@ public class OrderService {
     public Order createOrderForCurrentUser(User user) {
         Order order = new Order();
         order.setUser(user);
-        order.setPrice(cart.getTotalPrice());
+      //  order.setPrice(cart.getTotalPrice());
         // todo распутать этот кусок
         order.setItems(cart.getItemsInCart());
         for (OrderItem oi : cart.getItemsInCart()) {
             oi.setOrder(order);
         }
         order = orderRepository.save(order);
-        cart.clear();
+        cartService.clear();
         return order;
     }
 }

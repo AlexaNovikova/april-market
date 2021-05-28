@@ -18,7 +18,7 @@ public class TimeStatisticsController {
     private final StatisticsService statisticsService;
 
     @GetMapping
-    public Time showTime() {
-        return statisticsService.getServiceTime();
+    public String showTime() {
+        return statisticsService.getStatistics();
     }
 }

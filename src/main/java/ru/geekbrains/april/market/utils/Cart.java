@@ -1,27 +1,40 @@
 package ru.geekbrains.april.market.utils;
 
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.mapping.Collection;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
-import ru.geekbrains.april.market.dtos.ProductDto;
-import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
+import org.springframework.web.context.WebApplicationContext;
 import ru.geekbrains.april.market.models.OrderItem;
-import ru.geekbrains.april.market.models.Product;
-import ru.geekbrains.april.market.services.ProductService;
 
 import javax.annotation.PostConstruct;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+
+// Не уверена, что сделано верно. Как присваивать  serialVersionUID классам (Entity)? Нужно ли? Ведь
+// тогда нужно вносить дополнительное поле?
+
+//Не поняла как при выходе из учетной записи , сделать так, чтобы содержимое корзины было пустым?
+
+
+
+@Data
 @Component
 @RequiredArgsConstructor
-public class Cart {
-    private final ProductService productService;
-    private List<OrderItem> items;
+@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+public class Cart implements Serializable{
+
+    private static final long serialVersionUID = 820377086046398299L;
+    private ArrayList<OrderItem> items;
     private BigDecimal totalPrice;
 
     @PostConstruct
@@ -30,41 +43,10 @@ public class Cart {
         totalPrice=BigDecimal.ZERO;
     }
 
-    private void recalculate(){
-        totalPrice=BigDecimal.ZERO;
-        for(OrderItem oi:items){
-            totalPrice=totalPrice.add(oi.getPrice());
-        }
+    public List<OrderItem> getItemsInCart() {
+      return Collections.unmodifiableList(items);
     }
 
-    public void addToCart(Long id) {
-        for (OrderItem orderItem : items) {
-            if (orderItem.getProduct().getId().equals(id)) {
-                orderItem.incrementQuantity();
-                recalculate();
-                return;
-            }
-        }
-
-        Product product = productService.findOneById(id).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exists id: " + id + " (add to cart)"));
-        items.add(new OrderItem(product));
-        recalculate();
-    }
-
-
-    public void clear() {
-        items.clear();
-        recalculate();
-    }
-
-    public List<OrderItem> getItemsInCart(){
-        return Collections.unmodifiableList(items);
-    }
-
-    public void deleteAllItems() {
-        items.clear();
-         recalculate();
-    }
 
 //    public void deleteOneProduct(Long id) {
 //        Optional<Product> product = items.stream().filter((p) -> p.getId().equals(id)).findAny();
@@ -73,8 +55,12 @@ public class Cart {
 //        itemsCount--;
 //    }
 
+   public void add(OrderItem orderItem){
+        items.add(orderItem);
+   }
 
     public BigDecimal getTotalPrice() {
         return totalPrice;
     }
+
 }
