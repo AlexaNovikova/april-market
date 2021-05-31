@@ -36,6 +36,19 @@ public class ProductEndpoint {
         </soapenv:Envelope>
      */
 
+
+    /*
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:f="http://www.geekbrains.ru/april/market/ws/products">
+            <soapenv:Header/>
+            <soapenv:Body>
+                <f:getProductByIdRequest>
+                <f:id>1</f:id>
+                </f:getProductByIdRequest>
+            </soapenv:Body>
+        </soapenv:Envelope>
+     */
+
+
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAllProductsRequest")
     @ResponsePayload
     public GetAllProductsResponse getAllProducts(@RequestPayload GetAllProductsRequest request) {
