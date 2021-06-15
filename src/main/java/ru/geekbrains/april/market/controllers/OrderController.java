@@ -22,7 +22,7 @@ public class OrderController {
     private final OrderService orderService;
     private final UserService userService;
 
-    @PostMapping
+        @PostMapping
         public void createNewOrder(Principal principal, @RequestParam String telephone, @RequestParam String email,
             @RequestParam String address) {
             User user = userService.findByUsername(principal.getName()).get();

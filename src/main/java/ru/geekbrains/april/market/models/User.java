@@ -3,16 +3,18 @@ package ru.geekbrains.april.market.models;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import ru.geekbrains.april.market.configs.SecurityConfig;
 import ru.geekbrains.april.market.dtos.UserDto;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Entity
 @Data
 @Table(name = "users")
-public class User {
+public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

@@ -4,11 +4,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "addresses")
 @Data
-public class Address {
+public class Address  {
 
     @Id
     @Column(name="id")

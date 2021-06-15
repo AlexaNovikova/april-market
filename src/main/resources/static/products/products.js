@@ -38,10 +38,14 @@ angular.module('app').controller('productsController', function ($scope, $http, 
 
     $scope.addToCart = function (productId) {
         $http({
-            url: contextPath + '/api/v1/cart/add/' + productId,
-            method: 'GET'
+            url: contextPath + '/api/v1/cart/add/',
+            method: 'GET',
+              params: {
+                  prodId: productId,
+                  cartName: 'cart'
+              }
         }).then(function (response) {
-            $scope.loadCart();
+
         });
     }
 

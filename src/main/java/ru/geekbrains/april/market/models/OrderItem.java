@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Table(name ="order_items")
 @NoArgsConstructor
 @Data
-public class OrderItem implements Serializable{
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,39 +22,27 @@ public class OrderItem implements Serializable{
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="product_id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @Column(name="quantity")
+    @Column(name = "quantity")
     private int quantity;
 
-    @Column(name="price_per_product")
+    @Column(name = "price_per_product")
     private BigDecimal pricePerProduct;
 
-    @Column(name="price")
+    @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(name="updated_at")
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-    public OrderItem(Product product){
-        this.product=product;
-        this.quantity=1;
-        this.pricePerProduct=product.getPrice();
-        this.price=product.getPrice();
-    }
-
-    public  void incrementQuantity(){
-        quantity++;
-        this.price=this.pricePerProduct.multiply(new BigDecimal(this.quantity));
-    }
 }

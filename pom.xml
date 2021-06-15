@@ -69,13 +69,18 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session-data-redis</artifactId>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.lettuce</groupId>
-			<artifactId>lettuce-core</artifactId>
-			<optional>true</optional>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>3.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>

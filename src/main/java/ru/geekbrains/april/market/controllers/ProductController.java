@@ -4,6 +4,7 @@ package ru.geekbrains.april.market.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,11 @@ import ru.geekbrains.april.market.repositories.specifications.ProductSpecificati
 import ru.geekbrains.april.market.services.CategoryService;
 import ru.geekbrains.april.market.services.ProductService;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,6 +45,7 @@ public class ProductController {
             page = 1;
         }
         return productService.findAll(ProductSpecifications.build(params), page, 10);
+
     }
 
     @GetMapping("/{id}")

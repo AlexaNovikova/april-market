@@ -7,6 +7,8 @@ import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
 import ru.geekbrains.april.market.models.Category;
 import ru.geekbrains.april.market.services.CategoryService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/categories")
@@ -19,4 +21,8 @@ public class CategoryController {
      return categoryService.findById(id).orElseThrow(()-> new ResourceNotFoundException("Category doesn't exist. "+ id));
     }
 
+    @GetMapping
+    public List<Category> getAllCategories(){
+        return categoryService.findAllCategories();
+    }
 }

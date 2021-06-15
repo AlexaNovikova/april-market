@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.geekbrains.april.market.models.Category;
 import ru.geekbrains.april.market.repositories.CategoryRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,5 +20,9 @@ public class CategoryService {
 
     public Optional<Category> findByTitle(String title){
         return categoryRepository.findByTitle(title);
+    }
+
+    public List<Category> findAllCategories() {
+        return categoryRepository.findAll();
     }
 }

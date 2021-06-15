@@ -1,13 +1,17 @@
 package ru.geekbrains.april.market.utils;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
+import ru.geekbrains.april.market.dtos.OrderItemDto;
 import ru.geekbrains.april.market.models.OrderItem;
+import ru.geekbrains.april.market.models.Product;
 
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
@@ -20,47 +24,41 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
-// Не уверена, что сделано верно. Как присваивать  serialVersionUID классам (Entity)? Нужно ли? Ведь
-// тогда нужно вносить дополнительное поле?
-
-//Не поняла как при выходе из учетной записи , сделать так, чтобы содержимое корзины было пустым?
-
-
-
 @Data
-@Component
-@RequiredArgsConstructor
-@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class Cart implements Serializable{
+public class Cart {
+    private List<OrderItemDto> items;
+    private BigDecimal sum;
 
-    private static final long serialVersionUID = 820377086046398299L;
-    private ArrayList<OrderItem> items;
-    private BigDecimal totalPrice;
-
-    @PostConstruct
-    public void init(){
-        items=new ArrayList<>();
-        totalPrice=BigDecimal.ZERO;
+    public Cart() {
+        items = new ArrayList<>();
+        sum = BigDecimal.ZERO;
     }
 
-    public List<OrderItem> getItemsInCart() {
-      return Collections.unmodifiableList(items);
+    public boolean addToCart(Long id) {
+        for (OrderItemDto o : items) {
+            if (o.getProductId().equals(id)) {
+                o.incrementQuantity();
+                recalculate();
+                return true;
+            }
+        }
+        return false;
     }
 
-
-//    public void deleteOneProduct(Long id) {
-//        Optional<Product> product = items.stream().filter((p) -> p.getId().equals(id)).findAny();
-//        product.ifPresent(value -> items.remove(value));
-//        totalPrice=totalPrice.subtract(product.get().getPrice());
-//        itemsCount--;
-//    }
-
-   public void add(OrderItem orderItem){
-        items.add(orderItem);
-   }
-
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
+    public void addToCart(Product product) {
+        items.add(new OrderItemDto(product));
+        recalculate();
     }
 
+    public void clear() {
+        items.clear();
+        recalculate();
+    }
+
+    private void recalculate() {
+        sum = BigDecimal.ZERO;
+        for (OrderItemDto o : items) {
+            sum = sum.add(o.getPrice());
+        }
+    }
 }
