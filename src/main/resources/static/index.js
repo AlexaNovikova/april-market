@@ -28,6 +28,10 @@
                   templateUrl: 'statistics/statistics.html',
                   controller: 'statisticsController'
             })
+             .when('/product_info/:productIdParam', {
+                            templateUrl: 'product_info/product_info.html',
+                            controller: 'productInfoController'
+                        })
              .when('/registration', {
                    templateUrl: 'registration/registration.html',
                    controller: 'registrationController'
@@ -41,6 +45,17 @@
         if ($localStorage.aprilMarketCurrentUser) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.aprilMarketCurrentUser.token;
         }
+        if($localStorage.aprilCartId){
+        }else {
+        const contextPath = 'http://localhost:8189/market';
+                $http({
+                    url: contextPath + '/api/v1/cart/generate',
+                    method: 'GET'
+                }).then(function (response) {
+
+                $localStorage.aprilCartId=response.data.str;
+                });
+            }
     }
 })();
 
@@ -61,6 +76,19 @@ angular.module('app').controller('indexController', function ($scope, $http, $lo
 //            });
 //    };
 
+ $scope.mergeCarts = function () {
+        console.log('ready');
+        $http({
+            url: contextPath + '/api/v1/cart/merge',
+            method: 'GET',
+            params: {
+                'cartId': $localStorage.aprilCartId
+            }
+        }).then(function (response) {
+            console.log('ready');
+        });
+    }
+
     $scope.tryToAuth = function () {
         $http.post(contextPath + '/auth', $scope.user)
             .then(function successCallback(response) {
@@ -68,6 +96,7 @@ angular.module('app').controller('indexController', function ($scope, $http, $lo
                     $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
                     $localStorage.aprilMarketCurrentUser = {username: $scope.user.username, token: response.data.token};
                     $scope.currentUserName = $scope.user.username;
+                    $scope.mergeCarts();
                     $scope.user.username = null;
                     $scope.user.password = null;
                 }
@@ -77,6 +106,7 @@ angular.module('app').controller('indexController', function ($scope, $http, $lo
 
     $scope.tryToLogout = function () {
         $scope.clearUser();
+        $location.path('/');
     };
 
     $scope.clearUser = function () {

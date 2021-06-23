@@ -6,12 +6,15 @@ import org.springframework.security.access.method.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.april.market.dtos.OrderDto;
+import ru.geekbrains.april.market.dtos.UserDto;
 import ru.geekbrains.april.market.models.User;
 import ru.geekbrains.april.market.services.OrderService;
 import ru.geekbrains.april.market.services.UserService;
 
 import javax.transaction.Transactional;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,5 +38,13 @@ public class OrderController {
     public List<OrderDto> getAllOrdersForCurrentUser(Principal principal) {
         User user = userService.findByUsername(principal.getName()).get();
         return orderService.findAllByUser(user).stream().map(OrderDto::new).collect(Collectors.toList());
+    }
+
+
+    @GetMapping("/hasOrdered")
+    @Transactional
+    public boolean hasBeenOrderedByUser(Principal principal, @RequestParam Long id){
+        User user = userService.findByUsername(principal.getName()).get();
+        return orderService.findAllByUser(user).stream().map(OrderDto::new).anyMatch(o->o.hasProduct(id));
     }
 }

@@ -2,13 +2,14 @@ package ru.geekbrains.april.market.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name ="products")
@@ -32,7 +33,6 @@ public class Product {
     @JoinColumn(name="category_id")
     private Category category;
 
-
     @Column(name="created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -41,5 +41,8 @@ public class Product {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "product")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private List<Comment> comments;
 
 }

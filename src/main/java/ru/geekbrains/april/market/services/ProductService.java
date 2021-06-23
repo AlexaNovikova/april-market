@@ -9,9 +9,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.april.market.dtos.ProductDto;
+import ru.geekbrains.april.market.dtos.ProductInfo;
 import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
 import ru.geekbrains.april.market.models.Category;
+import ru.geekbrains.april.market.models.Comment;
 import ru.geekbrains.april.market.models.Product;
+import ru.geekbrains.april.market.repositories.CommentsRepository;
 import ru.geekbrains.april.market.repositories.ProductRepository;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -28,6 +31,7 @@ import java.util.Optional;
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+    private final CommentsRepository commentsRepository;
 
     public Page<Product> findPage(int page, int pageSize) {
         return productRepository.findAllBy(PageRequest.of(page, pageSize));
@@ -42,13 +46,13 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public void deleteById(Long id){
+    public void deleteById(Long id) {
         productRepository.deleteById(id);
     }
 
 
     @Transactional
-    public ProductDto createNewProduct (ProductDto productDto){
+    public ProductDto createNewProduct(ProductDto productDto) {
         Product product = new Product();
         product.setPrice(productDto.getPrice());
         product.setTitle(productDto.getTitle());
@@ -61,8 +65,8 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDto updateProduct(ProductDto productDto){
-        Product product = findOneById(productDto.getId()).orElseThrow(()->new ResourceNotFoundException("Product doesn't exist "+ productDto.getId()));
+    public ProductDto updateProduct(ProductDto productDto) {
+        Product product = findOneById(productDto.getId()).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exist " + productDto.getId()));
         product.setPrice(productDto.getPrice());
         product.setTitle(productDto.getTitle());
         Category category = categoryService.findByTitle(productDto.getCategoryTitle()).
@@ -70,6 +74,22 @@ public class ProductService {
                         productDto.getCategoryTitle()));
         product.setCategory(category);
         return new ProductDto(product);
+    }
+
+    @Transactional
+    public ProductInfo productInfo(Long id) {
+        Product product = findOneById(id).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exist " + id));
+        return new ProductInfo(product);
+    }
+
+    @Transactional
+    public void addComment(Long id, String text, String username) {
+        Product product = findOneById(id).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exist " + id));
+        Comment comment = new Comment();
+        product.getComments().add(comment);
+        comment.setComment(text);
+        comment.setUsername(username);
+        comment.setProduct(product);
     }
 
 }

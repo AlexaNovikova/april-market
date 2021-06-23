@@ -38,6 +38,24 @@ public class CartService {
         redisTemplate.opsForValue().set("april_cart_" + cartId, cart);
     }
 
+    public void merge(String userCartId, String guestCartId) {
+        Cart userCart = getCurrentCart(userCartId);
+        Cart guestCart = getCurrentCart(guestCartId);
+        userCart.merge(guestCart);
+        save(userCartId, userCart);
+        save(guestCartId, guestCart);
+    }
+
+    public void decrementProduct(String cartId, Long productId) {
+        Cart cart = getCurrentCart(cartId);
+        cart.decrementProduct(productId);
+        save(cartId, cart);
+    }
+
+    public boolean isCartExists(String cartId){
+        return redisTemplate.hasKey("april_cart_"+ cartId);
+    }
+
     public void clearCart(String cartId) {
         Cart cart = getCurrentCart(cartId);
         cart.clear();

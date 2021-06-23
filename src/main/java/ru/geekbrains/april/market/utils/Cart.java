@@ -16,10 +16,7 @@ import ru.geekbrains.april.market.models.Product;
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -32,6 +29,39 @@ public class Cart {
     public Cart() {
         items = new ArrayList<>();
         sum = BigDecimal.ZERO;
+    }
+
+    public void merge(Cart another) {
+        for (OrderItemDto anotherItem : another.items) {
+            boolean merged = false;
+            for (OrderItemDto myItem : items) {
+                if (myItem.getProductId().equals(anotherItem.getProductId())) {
+                    myItem.changeQuantity(anotherItem.getQuantity());
+                    merged = true;
+                    break;
+                }
+            }
+            if (!merged) {
+                items.add(anotherItem);
+            }
+        }
+        recalculate();
+        another.clear();
+    }
+
+    public void decrementProduct(Long id) {
+        Iterator<OrderItemDto> iter = items.iterator();
+        while (iter.hasNext()) {
+            OrderItemDto o = iter.next();
+            if (o.getProductId().equals(id)) {
+                o.changeQuantity(-1);
+                if (o.getQuantity() <= 0) {
+                    iter.remove();
+                }
+                recalculate();
+                return;
+            }
+        }
     }
 
     public boolean addToCart(Long id) {

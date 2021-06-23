@@ -39,12 +39,13 @@
         <td>{{p.price}}</td>
         <td>
             <button class="btn btn-outline-primary" ng-click="addToCart(p.id)">В корзину</button>
+            <button class="btn btn-outline-primary" ng-click="showProductInfo(p.id)">Посмотреть</button>
         </td>
     </tr>
     </tbody>
 </table>
 
-<nav aria-label="Page navigation">
+<nav aria-label="Page navigation" ng-show="productsPage.totalPages > 1" >
     <ul class="pagination">
         <li ng-class="productsPage.first ? 'page-item disabled' : 'page-item'">
             <a class="page-link" ng-click="loadPage(1)">В начало</a>

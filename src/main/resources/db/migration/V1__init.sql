@@ -35,6 +35,7 @@ CREATE TABLE users_addresses (
           primary key (user_id, address_id)
 );
 
+
 insert into roles (name)
 values
 ('ROLE_USER'),
@@ -115,4 +116,12 @@ CREATE table order_items (
     updated_at                      timestamp default current_timestamp
 );
 
+CREATE TABLE comments (
+          id                    bigserial primary key,
+          text                  text not null,
+          username               varchar(80) not null,
+          product_id            bigint not null references products(id)
+);
+
+insert into comments (text, username, product_id) values ('Good products', 'Dan', 1);
 COMMIT;

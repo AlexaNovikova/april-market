@@ -3,8 +3,10 @@ package ru.geekbrains.april.market.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.geekbrains.april.market.dtos.OrderDto;
 import ru.geekbrains.april.market.dtos.OrderItemDto;
 import ru.geekbrains.april.market.dtos.ProductDto;
 import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
@@ -16,6 +18,7 @@ import ru.geekbrains.april.market.utils.Cart;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ public class OrderService {
     private final ProductService productService;
     private final OrderRepository orderRepository;
     private final CartService cartService;
+    private final UserService userService;
 
     public List<Order> findAllByUser(User user) {
         return orderRepository.findAllByUser(user);
@@ -31,7 +35,7 @@ public class OrderService {
     public Order createOrderForCurrentUser(User user) {
         Order order = new Order();
         order.setUser(user);
-        Cart cart = cartService.getCurrentCart("cart"); // todo ERROR
+        Cart cart = cartService.getCurrentCart(user.getUsername()); // todo ERROR
         order.setPrice(cart.getSum());
         // todo распутать этот кусок
         order.setItems(new ArrayList<>());
@@ -46,7 +50,8 @@ public class OrderService {
         }
         order = orderRepository.save(order);
         cart.clear();
-        cartService.save("cart", cart); // todo ERROR
+        cartService.save(user.getUsername(), cart); // todo ERROR
         return order;
     }
+
 }

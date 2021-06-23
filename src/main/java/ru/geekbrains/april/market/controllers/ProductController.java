@@ -7,27 +7,36 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.geekbrains.april.market.dtos.OrderDto;
 import ru.geekbrains.april.market.dtos.ProductDto;
+import ru.geekbrains.april.market.dtos.ProductInfo;
 import ru.geekbrains.april.market.error_handling.InvalidDataException;
 import ru.geekbrains.april.market.error_handling.MarketError;
 import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
 import ru.geekbrains.april.market.models.Category;
+import ru.geekbrains.april.market.models.Order;
 import ru.geekbrains.april.market.models.Product;
+import ru.geekbrains.april.market.models.User;
 import ru.geekbrains.april.market.repositories.specifications.ProductSpecifications;
 import ru.geekbrains.april.market.services.CategoryService;
+import ru.geekbrains.april.market.services.OrderService;
 import ru.geekbrains.april.market.services.ProductService;
+import ru.geekbrains.april.market.services.UserService;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,6 +46,8 @@ import java.util.stream.Collectors;
 public class ProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final OrderService orderService;
+    private final UserService userService;
 
     @GetMapping
     public Page<ProductDto> getAllProducts(@RequestParam MultiValueMap<String, String> params,
@@ -49,9 +60,9 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ProductDto showProductById(@PathVariable Long id) {
-        Product product = productService.findOneById(id).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exist " + id));
-        return new ProductDto(product);
+    public ProductInfo showProductInfoById(@PathVariable Long id) {
+       Product product = productService.findOneById(id).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exist " + id));
+       return new ProductInfo(product);
     }
 
 //    @ExceptionHandler
@@ -84,6 +95,13 @@ public class ProductController {
         }
         return productService.createNewProduct(productDto);
     }
+
+    @PostMapping("/addComment")
+    public void addComment( @RequestParam String comment, @RequestParam Long id, @RequestParam String username) {
+        productService.addComment(id, comment, username);
+    }
+
+
 
 
     @PutMapping
