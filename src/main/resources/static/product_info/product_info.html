@@ -1,0 +1,52 @@
+<p></p>
+<h3>Информация о товаре</h3>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Название</th>
+        <th scope="col">Категория</th>
+        <th scope="col">Цена</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{prod.id}}</td>
+        <td>{{prod.title}}</td>
+        <td>{{prod.categoryTitle}}</td>
+        <td>{{prod.price}}</td>
+    </tr>
+    </tbody>
+</table>
+<p></p>
+<span ng-show="comments.length == 0">У товара пока нет ни одного комментария.</span>
+
+<h3 ng-show="comments.length > 0">Комментарии к товару.</h3>
+<table class="table" ng-show="comments.length > 0">
+    <thead>
+    <tr>
+        <td>Пользователь</td>
+        <td>Комментарий</td>
+    </tr>
+    </thead>
+    <tr ng-repeat="c in comments track by $index">
+        <td>{{c.username}}</td>
+        <td>{{c.text}}</td>
+        <br>
+    </tr>
+</table>
+</div>
+<p></p>
+
+<div ng-show="productHasBeenOrderedByUser == true" >
+<h3>Новый комментарий о товаре</h3>
+
+    <form novalidate ng-submit="addComment(comment)">
+        <div class="mb-3">
+            <label for="inputText" class="form-label">Comment</label>
+            <input type="text" class="form-control" ng-model="comment" id="inputText" aria-describedby="textHelp">
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить комментарий о товаре</button>
+    </form>
+
+</div>

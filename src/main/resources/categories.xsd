@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://www.geekbrains.ru/april/market/ws/categories"
+        xmlns:st="http://www.geekbrains.ru/april/market/ws/products"
+        targetNamespace="http://www.geekbrains.ru/april/market/ws/categories" elementFormDefault="qualified">
+
+    <xs:import schemaLocation="products.xsd" namespace="http://www.geekbrains.ru/april/market/ws/products"/>
+
+    <xs:element name="getCategoryByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCategoryByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="category" type="tns:category"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="category">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="products" maxOccurs="unbounded" type="st:product"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
